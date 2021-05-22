@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Credentials
+config.txt
+accounts.txt
+
+# Telethon sessions
+*.session
+sessions/*

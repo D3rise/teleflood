@@ -1,0 +1,5 @@
+AUTH_TYPE=simple
+API_ID=133722
+API_HASH=8aspduiowayoy8awoywgdausdowa
+PHONE_NUMBER=+18005553535
+PASSWORD=keyboardcat
