@@ -2,7 +2,6 @@
 import argparse
 import asyncio
 import time
-import sys
 import secrets
 from threading import Timer
 from functools import partial
