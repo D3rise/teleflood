@@ -3,7 +3,7 @@
   <img src="assets/teleflood_logo.png" width="36%"></img>
 </h1>
 
-### An Telegram bot that for flooding to DMs/chats with multiple accounts and proxy support
+### Telegram bot for flooding to DMs/chats with multiple accounts and proxy support
 
 ![Usage](assets/usage.gif)
 
@@ -19,7 +19,7 @@ Using this may result in banning your account(s) without ability to recovery it.
 
 ## Setting up
 
-### What do you need:
+### What do you need
 
 **1.** Your Telegram credentials:
 
@@ -28,7 +28,7 @@ Using this may result in banning your account(s) without ability to recovery it.
 
 **2.** API ID and API Hash (you can get it from [here](https://core.telegram.org/api/obtaining_api_id#obtaining-api-id))
 
-### How to setup this bot:
+### How to setup this bot
 
 **1.** Download this repository (using `git clone` or just click the big green button at the top of this page)  
 **2.** Install [Python](https://www.python.org/downloads/) (you may need to restart your computer if you're using Windows)  
