@@ -12,8 +12,8 @@ from telethon import types, errors
 
 parser = argparse.ArgumentParser(description="Teleflood - Telegram Flood Bot")
 parser.add_argument('--config-file', type=str, default="config.txt",
-                    help="file with config for the bot in format described on https://github.com/D3rise/teleflood/INSTRUCTIONS.md")
-parser.add_argument('--accounts-file', type=str, default="accounts.txt",
+                    help="file with config for the bot in format described on https://github.com/D3rise/teleflood/README.md")
+parser.add_argument('--accounts-file', type=str,
                     help="file with credentials for accounts to flood from")
 parser.add_argument('--message-count', type=int,
                     help="count of messages to send")
@@ -30,10 +30,11 @@ clients = []
 waiting_clients = []
 waiting_clients_timers = []
 
-message = args.message or config["MESSAGE"]
-message_count = args.message_count or int(config["MESSAGE_COUNT"])
-victim_id = args.victim_id or config["VICTIM_ID"]
-accounts_file_path = args.accounts_file or config["ACCOUNTS_FILE"]
+message = args.message or config.get("MESSAGE")
+message_count = args.message_count or int(config.get("MESSAGE_COUNT"))
+victim_id = args.victim_id or config.get("VICTIM_ID")
+accounts_file_path = args.accounts_file or config.get(
+    "ACCOUNTS_FILE") or "accounts.txt"
 
 
 async def start_flood(victim):
