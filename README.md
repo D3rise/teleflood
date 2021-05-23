@@ -3,6 +3,8 @@
   <img src="assets/teleflood_logo.png" width="36%"></img>
 </h1>
 
+### An Telegram bot that for flooding to DMs/chats with multiple accounts and proxy support
+
 ![Usage](assets/usage.gif)
 
 # ⚠ Achtung
