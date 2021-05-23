@@ -31,7 +31,7 @@ Using this may result in banning your account(s) without ability to recovery it.
 
 **1.** Download this repository (using `git clone` or just click the big green button at the top of this page)  
 **2.** Install [Python](https://www.python.org/downloads/) (you may need to restart your computer if you're using Windows)  
-**3.** Open directory with bot using `cmd` (on Windows) or terminal (on Mac OS and Linux) and type the following command: `python -m pip install -r requirements.txt`
+**3.** Open directory with bot using `cmd` (on Windows) or terminal (on Mac OS and Linux) and type the following command: `python -m pip install -r requirements.txt`  
 **3.** Create file with name `accounts.txt`  
 **4.** Put your account credentials in it using following format:
 
