@@ -96,13 +96,20 @@ async def main():
             account = accounts_file.readline()
 
         while account:
-            # If line (account) starts with an #, which means
-            # that this line is an comment, we will skip it
-            if account.startswith("#"):
+            # If line (account) starts with an # (or the
+            # line is empty), which means that this line
+            # is an comment, we will skip it
+            if account.startswith("#") or account == '':
                 go_to_next_line()
 
             # Account credentials need to be in format "phone:password:api_id:api_hash"
             credentials = account.split(':')
+
+            # If the line is empty and it wasn't skipped,
+            # which means that file is over, we will stop
+            # reading it.
+            if credentials == ['']:
+                break
 
             phone_number = credentials[0]
             password = credentials[1]
@@ -133,6 +140,11 @@ async def main():
                     f"Error while trying to log into {phone_number}: {error}")
 
             go_to_next_line()
+
+        if len(clients) == 0:
+            print(
+                f"Error: there isn't any account credentials in {accounts_file_path}!")
+            exit(1)
 
     # Get victim account using victim_id
     victim = await clients[0].get_entity(victim_id)
