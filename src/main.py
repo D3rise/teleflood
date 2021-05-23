@@ -38,11 +38,7 @@ accounts_file_path = args.accounts_file or config["ACCOUNTS_FILE"]
 
 
 async def start_flood(victim):
-    global waiting_clients_timers
-    global waiting_clients
-    global clients
-    global message
-    global message_count
+    global waiting_clients_timers, waiting_clients, clients, message, message_count
 
     # Removes client from waiting clients list and adds it to working clients list
     def remove_client_from_waiting_clients(client):
@@ -93,7 +89,18 @@ async def main():
         account = accounts_file.readline()
         line_number = 1
 
+        def go_to_next_line():
+            nonlocal line_number, account
+            # Go to next line in file
+            line_number += 1
+            account = accounts_file.readline()
+
         while account:
+            # If line (account) starts with an #, which means
+            # that this line is an comment, we will skip it
+            if account.startswith("#"):
+                go_to_next_line()
+
             # Account credentials need to be in format "phone:password:api_id:api_hash"
             credentials = account.split(':')
 
@@ -125,9 +132,7 @@ async def main():
                 print(
                     f"Error while trying to log into {phone_number}: {error}")
 
-            # Go to next line in file
-            line_number += 1
-            account = accounts_file.readline()
+            go_to_next_line()
 
     # Get victim account using victim_id
     victim = await clients[0].get_entity(victim_id)
