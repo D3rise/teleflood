@@ -9,7 +9,7 @@
 # ⚠ Achtung
 
 **This bot is used in purposes that are prehibited by Telegram terms of usage.  
-Using this may result in banning your account(s) without ability to recovery it.**
+Using this may result in banning your account(s) without ability to recover it.**
 
 ## Contents
 
