@@ -3,6 +3,8 @@
   <img src="assets/teleflood_logo.png" width="36%"></img>
 </h1>
 
+![Usage](assets/usage.gif)
+
 # ⚠ Achtung
 
 **This bot is used in purposes that are prehibited by Telegram terms of usage.  
@@ -51,6 +53,5 @@ Using this may result in banning your account(s) without ability to recovery it.
 
 **1.** Open directory with bot using `cmd` (on Windows) or terminal (on Mac OS and Linux)  
 **2.** Type the following command: `python src/main.py`
-![Usage](assets/usage.gif)
 
 - For more advanced users: if you want to get info about CLI, simply use the command `python src/main.py --help`
