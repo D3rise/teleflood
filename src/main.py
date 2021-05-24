@@ -16,8 +16,7 @@ waiting_clients_timers = []
 
 
 async def start_flood(victim):
-    """
-    Starts the flood process.
+    """Starts the flood process.
 
     ----------
     Parameters:
