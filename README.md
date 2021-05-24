@@ -21,6 +21,7 @@ Using this may result in banning your account(s) without ability to recover it.*
 **2.** [Usage](#usage)
 
 - [How to start this bot](#how-to-start-this-bot)
+- [How to setup proxy](#how-to-setup-proxy)
 
 ## Setting up
 

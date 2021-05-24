@@ -28,8 +28,7 @@ async def start_flood(victim):
 
     def remove_client_from_waiting_clients(client):
         """
-        Removes client from waiting clients list
-        and adds it to working clients list
+        Removes client from waiting clients list and adds it to working clients list
         """
         global waiting_clients_timers
 
