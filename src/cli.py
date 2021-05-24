@@ -3,7 +3,6 @@ import argparse
 
 def get_parser_with_arguments():
     """Returns argparse.ArgumentParser with added arguments for it."""
-
     parser = argparse.ArgumentParser(
         description="Teleflood - Telegram Flood Bot")
 

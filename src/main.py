@@ -6,7 +6,6 @@ import config
 from threading import Timer
 from functools import partial
 from tqdm import tqdm
-from dotenv import dotenv_values
 from telethon.sync import TelegramClient
 from telethon import types, errors, connection
 
@@ -17,22 +16,27 @@ waiting_clients_timers = []
 
 
 async def start_flood(victim):
-    """Starts the flood process.
-
-            Parameters:
-                    victim (telethon.types.User|telethon.types.Chat): A victim (user/chat) entity to flood
     """
-    global waiting_clients_timers, waiting_clients, clients, message, message_count
+    Starts the flood process.
+
+    ----------
+    Parameters:
+        victim (telethon.types.User|telethon.types.Chat): A victim (user/chat) entity to flood
+
+    """
+    global waiting_clients_timers, waiting_clients, clients
 
     def remove_client_from_waiting_clients(client):
         """
-        Removes client from waiting clients list 
+        Removes client from waiting clients list
         and adds it to working clients list
         """
         global waiting_clients_timers
+
         waiting_clients.remove(client)
         waiting_clients_timers = list(filter(
-            lambda timer: timer["client"] == client, waiting_clients_timers))
+            lambda timer: timer["client"] != client, waiting_clients_timers))
+
         clients.append(client)
 
     def get_timer_with_min_wait_time():
