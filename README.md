@@ -66,7 +66,7 @@ Using this may result in banning your account(s) without ability to recover it.*
 
 ### How to setup proxy
 
-**1.** Open your config file
+**1.** Open your config file  
 **2.** Fill it with new values as described here:
 
 ```python
