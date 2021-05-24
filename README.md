@@ -13,8 +13,14 @@ Using this may result in banning your account(s) without ability to recover it.*
 
 ## Contents
 
-**1.** [Setting up](#setting-up)  
+**1.** [Setting up](#setting-up)
+
+- [What do you need](#what-do-you-need)
+- [How to setup this bot](#how-to-setup-this-bot)
+
 **2.** [Usage](#usage)
+
+- [How to start this bot](#how-to-start-this-bot)
 
 ## Setting up
 
@@ -56,3 +62,49 @@ Using this may result in banning your account(s) without ability to recover it.*
 **2.** Type the following command: `python src/main.py`
 
 - For more advanced users: if you want to get info about CLI, simply use the command `python src/main.py --help`
+
+### How to setup proxy
+
+**1.** Open your config file
+**2.** Fill it with new values as described here:
+
+```python
+# This is your proxy type.
+# Can be MTPROTO, SOCKS5, SOCKS4 or HTTP
+# Example:
+PROXY_TYPE=SOCKS5
+
+# The IP address or DNS name of the proxy server
+# Example:
+PROXY_ADDR=1.1.1.1
+
+# The port of proxy server, defaults to 1070 for
+# SOCKS, 8080 for HTTP and 443 for MTPROTO
+# Example:
+PROXY_PORT=2002
+
+# This modifies DNS resolving behavior. If set
+# to yes, DNS resolving will be performed on
+# proxy server. If set to no, DNS resolving
+# will be performing locally
+# Example:
+PROXY_RDNS=yes
+
+# For SOCKS5 servers, this allows simple
+# username/password auth with ther server.
+# For SOCKS4 servers, this parameter will be
+# sent as userid. This parameter will be ignored
+# if using HTTP or MTPROTO proxy
+# Example:
+PROXY_USERNAME=admin
+
+# This parameter is only valid for SOCKS5 and
+# MTPROTO servers and specifies the respective
+# password for username (on SOCKS5 servers)
+# provided.
+# IMPORTANT: For MTPROTO this parameter is alias for secret
+# Example:
+PROXY_PASSWORD=wajdosdpwaiwpojaiwdj
+```
+
+**3.** Start bot as usual ([How-to](#how-to-start-this-bot))

@@ -40,7 +40,7 @@ def get_parser_with_arguments():
 
     parser.add_argument('--proxy-port', type=int,
                         help="the port of proxy server, defaults to 1080 for "
-                        "socks and 8080 for http. "
+                        "SOCKS, 8080 for HTTP and 443 for MTPROTO. "
                         "Config file key name: PROXY_PORT")
 
     parser.add_argument('--proxy-rdns', type=bool,
@@ -52,7 +52,7 @@ def get_parser_with_arguments():
     parser.add_argument('--proxy-username', type=str,
                         help="for SOCKS5 servers, this allows simple username/password "
                         "auth with the server. For SOCKS4 servers, this parameter will "
-                        "be sent as userid. This parameter will be ignored if using HTTP auth. "
+                        "be sent as userid. This parameter will be ignored if using HTTP and MTPROTO proxy. "
                         "Config file key name: PROXY_USERNAME")
 
     parser.add_argument('--proxy-password', type=str,
