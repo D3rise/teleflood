@@ -61,6 +61,9 @@ async def start_flood(victim):
             clients.remove(client)
             waiting_clients.append(client)
 
+            # Create timer for required number of seconds
+            # and after they will pass, we will return
+            # client to working state
             timer = Timer(error.seconds, partial(
                 remove_client_from_waiting_clients, client))
             waiting_clients_timers.append(
