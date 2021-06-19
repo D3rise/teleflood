@@ -24,7 +24,6 @@ Using this may result in banning your account(s) without ability to recover it.*
 - [How to setup proxy](#how-to-setup-proxy)
 
 ## Setting up
-
 ### What do you need
 
 **1.** Your Telegram credentials:
